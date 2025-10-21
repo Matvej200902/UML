@@ -68,7 +68,8 @@ public:
 #define MAX_ENGINE_CONSUMPTION 25
 class Engine
 {
-	const double CONSUMPTION;		//Расход топлива на 100 км
+	const double CONSUMPTION;//Расход топлива на 100 км
+	const double IDLE_CONSUMPTION_PER_SECOND;
 	double consumption_per_second;	//Расход топлива за 1 секунду
 	bool is_started;
 public:
@@ -76,15 +77,26 @@ public:
 	{
 		return consumption_per_second;
 	}
+	void set_consumption_per_second(int speed)
+	{
+		if (speed = 0)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND;
+		else if (speed < 60)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 20 / 3;
+		else if (speed < 100)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 7/3*2;
+		else if (speed < 140)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 20 / 3;
+		else if (speed < 200)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 25/3;
+		else if (speed < 300)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 10;
+	}	
 	Engine(double consumption) :
 		CONSUMPTION
 		(
 			consumption < MIN_ENGINE_CONSUMPTION ? MIN_ENGINE_CONSUMPTION :
 			consumption > MAX_ENGINE_CONSUMPTION ? MAX_ENGINE_CONSUMPTION :
 			consumption
-		)
+		),
+		IDLE_CONSUMPTION_PER_SECOND(CONSUMPTION*3e-5)
 	{
-		consumption_per_second = CONSUMPTION * 3e-5;	//e - Exponent (Для десятичной системы счисления = 10)
+		//consumption_per_second = CONSUMPTION * 3e-5;	//e - Exponent (Для десятичной системы счисления = 10)
+		consumption_per_second = IDLE_CONSUMPTION_PER_SECOND;
 		is_started = false;
 		cout << "Engine is ready:\t" << this << endl;
 	}
@@ -236,6 +248,7 @@ public:
 				stop();
 				get_out();
 			}
+			engine.set_consumption_per_second(speed);
 			if (tank.get_fuel_level() == 0)engine.stop();
 			if (speed == 0 && threads.free_wheeling_thread.joinable())
 				threads.free_wheeling_thread.join();
@@ -247,6 +260,7 @@ public:
 		{
 			speed--;
 			if (speed < 0)speed = 0;
+			
 			std::this_thread::sleep_for(1s);
 		}
 	}
@@ -262,6 +276,7 @@ public:
 		while (driver_inside)
 		{
 			system("CLS");
+			for (int i = 0; i < speed / 2.5; i++)cout << "|"; cout << endl;
 			cout << "Speed:\t" << speed << " km/h\n";
 			cout << "Fuel level: " << tank.get_fuel_level() << " liters.";
 			if (tank.get_fuel_level() < 5)
@@ -272,6 +287,8 @@ public:
 				SetConsoleTextAttribute(hConsole, 0x07);
 			}
 			cout << endl;
+			cout <<
+				"Consumption per second:\t" << engine.get_consumption_per_second() << " liters.\n";
 			cout << "Engine is " << (engine.started() ? "started" : "stopped") << endl;
 			std::this_thread::sleep_for(500ms);
 		}
