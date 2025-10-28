@@ -3,7 +3,6 @@
 #include<iostream>
 #include<conio.h>
 #include<thread>
-#include<chrono>
 using namespace std;
 using namespace std::chrono_literals;
 
@@ -14,8 +13,8 @@ using namespace std::chrono_literals;
 #define MAX_TANK_VOLUME 120
 class Tank
 {
-	const int VOLUME;	//Объем бака
-	double fuel_level;	//Уровень топлива
+	const int VOLUME;	//РћР±СЉРµРј Р±Р°РєР°
+	double fuel_level;	//РЈСЂРѕРІРµРЅСЊ С‚РѕРїР»РёРІР°
 public:
 	int get_VOLUME()const
 	{
@@ -47,11 +46,11 @@ public:
 	{
 		//	VOLUME = volume;
 		//	l-value = r-value;
-			//	l-value - это переменная слева от оператора 'присвоить' =
+			//	l-value - СЌС‚Рѕ РїРµСЂРµРјРµРЅРЅР°СЏ СЃР»РµРІР° РѕС‚ РѕРїРµСЂР°С‚РѕСЂР° 'РїСЂРёСЃРІРѕРёС‚СЊ' =
 		fuel_level = 0;
 		cout << "Tank is ready:\t" << this << endl;
 	}
-	//expression - выражение
+	//expression - РІС‹СЂР°Р¶РµРЅРёРµ
 	~Tank()
 	{
 		cout << "Tank is over:\t" << this << endl;
@@ -68,9 +67,9 @@ public:
 #define MAX_ENGINE_CONSUMPTION 25
 class Engine
 {
-	const double CONSUMPTION;//Расход топлива на 100 км
-	const double IDLE_CONSUMPTION_PER_SECOND;
-	double consumption_per_second;	//Расход топлива за 1 секунду
+	const double CONSUMPTION;		//Р Р°СЃС…РѕРґ С‚РѕРїР»РёРІР° РЅР° 100 РєРј
+	const double IDLE_CONSUMPTION_PER_SECOND;	//Р Р°СЃС…РѕРґ С‚РѕРїР»РёРІР° Р·Р° 1 СЃРµРєСѓРЅРґСѓ
+	double consumption_per_second;	//Р Р°СЃС…РѕРґ С‚РѕРїР»РёРІР° Р·Р° 1 СЃРµРєСѓРЅРґСѓ
 	bool is_started;
 public:
 	double get_consumption_per_second()const
@@ -79,13 +78,13 @@ public:
 	}
 	void set_consumption_per_second(int speed)
 	{
-		if (speed = 0)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND;
+		if (speed == 0)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND;
 		else if (speed < 60)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 20 / 3;
 		else if (speed < 100)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 7/3*2;
-		else if (speed < 140)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 20 / 3;
+		else if (speed < 140)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 20/3;
 		else if (speed < 200)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 25/3;
 		else if (speed < 300)consumption_per_second = IDLE_CONSUMPTION_PER_SECOND * 10;
-	}	
+	}
 	Engine(double consumption) :
 		CONSUMPTION
 		(
@@ -95,7 +94,7 @@ public:
 		),
 		IDLE_CONSUMPTION_PER_SECOND(CONSUMPTION*3e-5)
 	{
-		//consumption_per_second = CONSUMPTION * 3e-5;	//e - Exponent (Для десятичной системы счисления = 10)
+		//consumption_per_second = CONSUMPTION * 3e-5;	//e - Exponent (Р”Р»СЏ РґРµСЃСЏС‚РёС‡РЅРѕР№ СЃРёСЃС‚РµРјС‹ СЃС‡РёСЃР»РµРЅРёСЏ = 10)
 		consumption_per_second = IDLE_CONSUMPTION_PER_SECOND;
 		is_started = false;
 		cout << "Engine is ready:\t" << this << endl;
@@ -135,12 +134,12 @@ class Car
 	int speed;
 	int accelleration;
 	bool driver_inside;
-	struct Threads	//Создаем и описываем структуру
+	struct Threads	//РЎРѕР·РґР°РµРј Рё РѕРїРёСЃС‹РІР°РµРј СЃС‚СЂСѓРєС‚СѓСЂСѓ
 	{
 		std::thread panel_thread;
 		std::thread engine_idle_thread;
 		std::thread free_wheeling_thread;
-	}threads;		//Создаем экземпляр этой структуры сразу же после ее описания
+	}threads;		//РЎРѕР·РґР°РµРј СЌРєР·РµРјРїР»СЏСЂ СЌС‚РѕР№ СЃС‚СЂСѓРєС‚СѓСЂС‹ СЃСЂР°Р·Сѓ Р¶Рµ РїРѕСЃР»Рµ РµРµ РѕРїРёСЃР°РЅРёСЏ
 public:
 	Car(int consumption, int volume, int max_speed = 250, int accelleration = 20) :
 		engine(consumption),
@@ -172,7 +171,7 @@ public:
 	{
 		driver_inside = false;
 		if (threads.panel_thread.joinable())threads.panel_thread.join();
-		system("CLS");	//Очистка экрана
+		system("CLS");	//РћС‡РёСЃС‚РєР° СЌРєСЂР°РЅР°
 		cout << "You are out of you car" << endl;
 	}
 	void start()
@@ -231,7 +230,7 @@ public:
 					tank.fill(amount);
 				}
 				break;
-			case 'i':	//Ignition - зажигание
+			case 'i':	//Ignition - Р·Р°Р¶РёРіР°РЅРёРµ
 			case 'I':
 				if (engine.started())stop();
 				else start();
@@ -260,7 +259,6 @@ public:
 		{
 			speed--;
 			if (speed < 0)speed = 0;
-			
 			std::this_thread::sleep_for(1s);
 		}
 	}
@@ -282,12 +280,12 @@ public:
 			if (tank.get_fuel_level() < 5)
 			{
 				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(hConsole, 0xCF);
+				SetConsoleTextAttribute(hConsole, 0x4F);
 				cout << " LOW FUEL ";
 				SetConsoleTextAttribute(hConsole, 0x07);
 			}
 			cout << endl;
-			cout <<
+			cout << 
 				"Consumption per second:\t" << engine.get_consumption_per_second() << " liters.\n";
 			cout << "Engine is " << (engine.started() ? "started" : "stopped") << endl;
 			std::this_thread::sleep_for(500ms);
@@ -316,7 +314,7 @@ void main()
 	do
 	{
 		double fuel;
-		cout << "Введите объем топлива: "; cin >> fuel;
+		cout << "Р’РІРµРґРёС‚Рµ РѕР±СЉРµРј С‚РѕРїР»РёРІР°: "; cin >> fuel;
 		tank.fill(fuel);
 		tank.info();
 	} while (true);
